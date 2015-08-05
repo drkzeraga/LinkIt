@@ -7,6 +7,7 @@ public class GemSpawner : MonoBehaviour
 	public GameObject[] mGemTypes;
 	public int mLaneCount = 1;
 	public float mSpawnInterval = 1.0f;
+	public float mDropSpeed = 1.0f;
 
 	private float mTimeElapsed = 0.0f;
 	private LinkedList<Object> mGems = new LinkedList<Object>();
@@ -42,11 +43,24 @@ public class GemSpawner : MonoBehaviour
 		return Random.Range ( 1, Mathf.Max( 1, mLaneCount + 1 ) );
 	}
 
+	// Get the camera view height in world space
+	float GetWorldHeight()
+	{
+		if( Camera.main.orthographic )
+		{
+			return Camera.main.orthographicSize;
+		}
+		else
+		{
+			return Camera.main.transform.position.y + Mathf.Abs ( Camera.main.transform.position.z ) * Mathf.Tan ( 0.5f * Mathf.Deg2Rad * Camera.main.fieldOfView );
+		}
+	}
+
 	// Spawn logic
 	void Spawn ()
 	{
 		// Assume camera position is at ( 0 , y, z )
-		float height = Camera.main.transform.position.y + Mathf.Abs ( Camera.main.transform.position.z ) * Mathf.Tan( 0.5f * Mathf.Deg2Rad * Camera.main.fieldOfView );
+		float height = GetWorldHeight();
 		float width = Camera.main.aspect * height;
 
 		int c = GetNextGem ();
@@ -57,7 +71,7 @@ public class GemSpawner : MonoBehaviour
 		float spawnWidth = -2.0f * minSpawnX;
 
 		float offset = minSpawnX + ( float )l * spawnWidth / ( float )( mLaneCount + 1 );
-		Vector3 spawnPos = Vector3.up * height +
+		Vector3 spawnPos = Vector3.up * height+
 						   Vector3.right * offset;
 
 		mGems.AddLast( Instantiate ( mGemTypes [ c ], spawnPos, Quaternion.identity ) );
@@ -66,7 +80,8 @@ public class GemSpawner : MonoBehaviour
 	void UpdateGems ()
 	{
 		// Assume camera position is at ( 0 , y, z )
-		float height = Camera.main.transform.position.y + Mathf.Abs ( Camera.main.transform.position.z ) * Mathf.Tan( 0.5f * Mathf.Deg2Rad * Camera.main.fieldOfView );
+		float height = GetWorldHeight();
+		float dropDistance = mDropSpeed * Time.deltaTime;
 
 		var current = mGems.First;
 		while ( current != mGems.Last )
@@ -75,10 +90,13 @@ public class GemSpawner : MonoBehaviour
 
 			current = current.Next;
 
-			c.transform.position -= Vector3.up * Time.deltaTime;
+			c.transform.position -= Vector3.up * dropDistance;
 			// Out of range
 			if( c.transform.position.y <= -height )
+			{
 				mGems.Remove( c );
+				Destroy( c );
+			}
 		}
 	}
 }
