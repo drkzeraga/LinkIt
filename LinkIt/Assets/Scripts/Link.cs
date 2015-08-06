@@ -58,10 +58,10 @@ public class Link : MonoBehaviour
         if ( spawner == null )
             return;
 
-        Vector3 direction = transform.position - mPrevPosition;
+        Vector2 direction = ( Vector2 )transform.position - ( Vector2 )mPrevPosition;
         float distance = direction.magnitude;
         direction.Normalize ();
-        Ray r = new Ray ( mPrevPosition, direction );
+        Ray r = new Ray ( ( Vector2 )mPrevPosition, direction );
 
         foreach ( var gem in spawner.GetAllGems() )
         {
@@ -76,11 +76,35 @@ public class Link : MonoBehaviour
             if ( wCollider == null )
                 continue;
 
-            if( wCollider.bounds.IntersectRay( r ) )
+            if ( distance == 0.0f )
             {
-                g.SetIsLinked ( true );
-                mLinkedGems.Add( gem );
-                Debug.Log ( "Ray = " + r + ", Distance = " + distance );
+                if ( wCollider.bounds.Contains( ( Vector2 )mPrevPosition ) )
+                {
+                    g.SetIsLinked ( true );
+                    mLinkedGems.Add( gem );
+                    Debug.Log ( "[Collided] Bound = " + wCollider.bounds + ", Point = " + mPrevPosition );
+                }
+                //else
+                //{
+                //    Debug.Log ( "[Not Collided] Bound = " + wCollider.bounds + ", Point = " + mPrevPosition );
+                //}
+            }
+            else
+            {
+                float intersectDistance;
+                if ( wCollider.bounds.IntersectRay( r, out intersectDistance ) )
+                {
+                    if ( intersectDistance >= 0.0f && distance >= intersectDistance )
+                    { 
+                        g.SetIsLinked ( true );
+                        mLinkedGems.Add( gem );
+                        Debug.Log ( "[Collided] Bound = " + wCollider.bounds + ", Ray = " + r + ", Distance = " + distance + ", intersect = " + intersectDistance );
+                    }
+                }
+                //else
+                //{
+                //    Debug.Log ( "[Not Collided] Bound = " + wCollider.bounds + ", Ray = " + r + ", Distance = " + distance );
+                //}
             }
         }
     }
@@ -91,7 +115,7 @@ public class Link : MonoBehaviour
         foreach ( var gem in mLinkedGems )
         {
             Gem g = gem.GetComponent< Gem >();
-            //  @todo: Destroy linked gems
+            //  @todo: Destroy linked gems if more than 3
             if ( g != null )
                 g.SetIsLinked ( false );
         }
