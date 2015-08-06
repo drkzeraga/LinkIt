@@ -10,12 +10,24 @@ public class GemSpawner : MonoBehaviour
 	public float mDropSpeed = 1.0f;
 
 	private float mTimeElapsed = 0.0f;
-	private LinkedList<Object> mGems = new LinkedList<Object>();
+	private LinkedList< GameObject > mGems = new LinkedList< GameObject > ();
+
+    // Get All Gems
+    public LinkedList< GameObject > GetAllGems ()
+    {
+        return mGems;
+    }
 
 	// Use this for initialization
 	void Start () 
 	{
-	
+        // Automated correction
+	    for ( int i = 0; i < mGemTypes.Length; ++i )
+        {
+            Gem g = mGemTypes[i].GetComponent< Gem >();
+            if ( g != null )
+                g.mType = i;
+        }
 	}
 	
 	// Update is called once per frame
@@ -74,7 +86,7 @@ public class GemSpawner : MonoBehaviour
 		Vector3 spawnPos = Vector3.up * height+
 						   Vector3.right * offset;
 
-		mGems.AddLast( Instantiate ( mGemTypes [ c ], spawnPos, Quaternion.identity ) );
+		mGems.AddLast( ( GameObject )( Instantiate ( mGemTypes [ c ], spawnPos, Quaternion.identity ) ) );
 	}
 
 	void UpdateGems ()
@@ -86,11 +98,15 @@ public class GemSpawner : MonoBehaviour
 		var current = mGems.First;
 		while ( current != mGems.Last )
 		{
-			GameObject c = ( GameObject )current.Value;
+			GameObject c = current.Value;
 
 			current = current.Next;
 
-			c.transform.position -= Vector3.up * dropDistance;
+            // Not linked, we update position
+            Gem g = c.GetComponent< Gem >();
+            if ( g == null || !g.GetIsLinked() )
+			    c.transform.position -= Vector3.up * dropDistance;
+
 			// Out of range
 			if( c.transform.position.y <= -height )
 			{

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\FollowCursor.cs" />
+     <Compile Include="Assets\Scripts\Gem.cs" />
      <Compile Include="Assets\Scripts\GemSpawner.cs" />
      <Compile Include="Assets\Scripts\Link.cs" />
      <None Include="Assets\Utility Shaders Free\Shaders\USV1 Preview Blur.shader" />
