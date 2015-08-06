@@ -13,6 +13,6 @@ public class Gem : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		//transform.position -= Vector3.up * Time.deltaTime;
+		//transform.position -= Vector3.up *  Time.fixedDeltaTime;
 	}
 }

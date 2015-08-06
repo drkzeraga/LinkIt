@@ -19,11 +19,11 @@ public class GemSpawner : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	void FixedUpdate () 
 	{
 		UpdateGems ();
 
-		mTimeElapsed += Time.deltaTime;
+		mTimeElapsed +=  Time.fixedDeltaTime;
 		if( mTimeElapsed >= mSpawnInterval )
 		{
 			Spawn ();
@@ -81,7 +81,7 @@ public class GemSpawner : MonoBehaviour
 	{
 		// Assume camera position is at ( 0 , y, z )
 		float height = GetWorldHeight();
-		float dropDistance = mDropSpeed * Time.deltaTime;
+		float dropDistance = mDropSpeed *  Time.fixedDeltaTime;
 
 		var current = mGems.First;
 		while ( current != mGems.Last )
