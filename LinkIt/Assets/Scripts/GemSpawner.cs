@@ -108,7 +108,8 @@ public class GemSpawner : MonoBehaviour
 			    c.transform.position -= Vector3.up * dropDistance;
 
 			// Out of range
-			if( c.transform.position.y <= -height )
+			if( c.transform.position.y <= -height ||
+                ( g != null && g.GetIsDestroyed() ) )
 			{
 				mGems.Remove( c );
 				Destroy( c );

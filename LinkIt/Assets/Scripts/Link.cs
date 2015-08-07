@@ -10,6 +10,7 @@ public class Link : MonoBehaviour
     private List< GameObject > mLinkedGems = new List< GameObject > ();     //!< Currently linked objects
     private Vector3 mPrevPosition;
     private int mLinkType = -1;                                             //!< Current link type
+    private bool mFailLink = false;
 
     // Is linking?
     bool IsLinking ()
@@ -44,6 +45,39 @@ public class Link : MonoBehaviour
         mTrail = null;
     }
 
+    // Set link colour
+    void SetLinkColor ( int type )
+    {
+        if ( mTrail == null || mLinkType != -1 )
+            return;
+
+        Color c;
+        switch ( type )
+        {
+            case 0:
+                c = Color.blue;
+                break;
+            case 1:
+                c = Color.green;
+                break;
+            case 2:
+                c = Color.red;
+                break;
+            case 3:
+                c = Color.yellow;
+                break;
+            default:
+                c = Color.white;
+                break;
+        }
+
+        Material trail = mTrail.GetComponent< TrailRenderer > ().material;
+
+        // Set the color of the material to tint the trail.
+        if ( trail != null )
+            trail.SetColor( "_Color", c );
+    }
+
     // Link gems
     void LinkGems ()
     {
@@ -72,28 +106,63 @@ public class Link : MonoBehaviour
                 continue;
 
             // Test for collision
-            // @todo: Test for correct or wrong collision
-            BoxCollider2D wCollider = gem.GetComponent< BoxCollider2D > ();
-            if ( wCollider == null )
-                continue;
-
-            if ( distance == 0.0f )
+            if ( mLinkType == -1 || mLinkType == g.mType )
             {
-                if ( wCollider.bounds.Contains( ( Vector2 )mPrevPosition ) )
+                CircleCollider2D cCollider = gem.GetComponent< CircleCollider2D > ();
+                if ( cCollider == null )
+                    continue;
+            
+                if ( distance == 0.0f )
                 {
-                    g.SetIsLinked ( true );
-                    mLinkedGems.Add( gem );
+                    if ( cCollider.bounds.Contains( ( Vector2 )mPrevPosition ) )
+                    {
+                        g.SetIsLinked ( true );
+                        mLinkedGems.Add( gem );
+
+                        SetLinkColor ( g.mType );
+                        mLinkType = g.mType;
+                    }
+                }
+                else
+                {
+                    float intersectDistance;
+                    if ( cCollider.bounds.IntersectRay( r, out intersectDistance ) )
+                    {
+                        if ( intersectDistance >= 0.0f && distance >= intersectDistance )
+                        { 
+                            g.SetIsLinked ( true );
+                            mLinkedGems.Add( gem );
+
+                            SetLinkColor ( g.mType );
+                            mLinkType = g.mType;
+                        }
+                    }
                 }
             }
             else
             {
-                float intersectDistance;
-                if ( wCollider.bounds.IntersectRay( r, out intersectDistance ) )
+                BoxCollider2D wCollider = gem.GetComponent< BoxCollider2D > ();
+                if ( wCollider == null )
+                    continue;
+
+                if ( distance == 0.0f )
                 {
-                    if ( intersectDistance >= 0.0f && distance >= intersectDistance )
-                    { 
-                        g.SetIsLinked ( true );
-                        mLinkedGems.Add( gem );
+                    if ( wCollider.bounds.Contains( ( Vector2 )mPrevPosition ) )
+                    {
+                        DestoryLinkedGems ();
+                        mFailLink = true;
+                    }
+                }
+                else
+                {
+                    float intersectDistance;
+                    if ( wCollider.bounds.IntersectRay( r, out intersectDistance ) )
+                    {
+                        if ( intersectDistance >= 0.0f && distance >= intersectDistance )
+                        { 
+                            DestoryLinkedGems ();
+                            mFailLink = true;
+                        }
                     }
                 }
             }
@@ -103,31 +172,45 @@ public class Link : MonoBehaviour
     // Destory all currently linked gems
     void DestoryLinkedGems ()
     {
+        bool destory = mLinkedGems.Count >= 3;
         foreach ( var gem in mLinkedGems )
         {
             Gem g = gem.GetComponent< Gem >();
             //  @todo: Destroy linked gems if more than 3
             if ( g != null )
-                g.SetIsLinked ( false );
+            {
+                if ( destory )
+                    g.SetIsDestroyed ( true );
+                else
+                    g.SetIsLinked ( false );
+            }
         }
 
         mLinkedGems.Clear();
+        mLinkType = -1;
     }
 
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
         // Linking
-        if( IsLinking () )
-        { 
-            Ray r = Camera.main.ScreenPointToRay ( Input.mousePosition );
-            transform.position = r.GetPoint ( Mathf.Abs( Camera.main.transform.position.z ) - Camera.main.nearClipPlane );
+        if ( IsLinking () )
+        {
+            if ( !mFailLink )
+            { 
+                Ray r = Camera.main.ScreenPointToRay ( Input.mousePosition );
+                transform.position = r.GetPoint ( Mathf.Abs( Camera.main.transform.position.z ) - Camera.main.nearClipPlane );
 
-            CreateLink ();
+                CreateLink ();
 
-            // Link Logic
-            LinkGems ();
-            mPrevPosition = transform.position;
+                // Link Logic
+                LinkGems ();
+                mPrevPosition = transform.position;
+            }
+            else
+            {
+                DestoryLink ();
+            }
         }
         // Not Linking
         else
@@ -136,6 +219,8 @@ public class Link : MonoBehaviour
 
             // Unlink logic
             DestoryLinkedGems ();
+
+            mFailLink = false;
         }
 	}
 }

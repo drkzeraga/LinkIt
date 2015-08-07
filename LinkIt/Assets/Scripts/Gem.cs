@@ -5,7 +5,8 @@ public class Gem : MonoBehaviour
 {
     public int mType = 0;               //!< Type
 
-    private bool mLinked = false;   //!< Is linked
+    private bool mLinked = false;       //!< Is linked
+    private bool mDestroyed = false;    //!< Is destroyed
 
     // Get is linked
     public bool GetIsLinked ()
@@ -17,6 +18,18 @@ public class Gem : MonoBehaviour
     public void SetIsLinked ( bool linked )
     {
         mLinked = linked;
+    }
+
+    // Get is destroyed
+    public bool GetIsDestroyed ()
+    {
+        return mDestroyed;
+    }
+
+    // Set is destroyed (Call by link script only!)
+    public void SetIsDestroyed ( bool destroyed )
+    {
+        mDestroyed = destroyed;
     }
 
 	// Use this for initialization
