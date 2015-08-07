@@ -9,6 +9,7 @@ public class Link : MonoBehaviour
     private GameObject mTrail = null;                                       //!< Trail
     private List< GameObject > mLinkedGems = new List< GameObject > ();     //!< Currently linked objects
     private Vector3 mPrevPosition;
+    private int mLinkType = -1;                                             //!< Current link type
 
     // Is linking?
     bool IsLinking ()
@@ -82,12 +83,7 @@ public class Link : MonoBehaviour
                 {
                     g.SetIsLinked ( true );
                     mLinkedGems.Add( gem );
-                    Debug.Log ( "[Collided] Bound = " + wCollider.bounds + ", Point = " + mPrevPosition );
                 }
-                //else
-                //{
-                //    Debug.Log ( "[Not Collided] Bound = " + wCollider.bounds + ", Point = " + mPrevPosition );
-                //}
             }
             else
             {
@@ -98,13 +94,8 @@ public class Link : MonoBehaviour
                     { 
                         g.SetIsLinked ( true );
                         mLinkedGems.Add( gem );
-                        Debug.Log ( "[Collided] Bound = " + wCollider.bounds + ", Ray = " + r + ", Distance = " + distance + ", intersect = " + intersectDistance );
                     }
                 }
-                //else
-                //{
-                //    Debug.Log ( "[Not Collided] Bound = " + wCollider.bounds + ", Ray = " + r + ", Distance = " + distance );
-                //}
             }
         }
     }
