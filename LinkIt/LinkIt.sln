@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 
 Project("{8BDD736A-90C6-D3A9-D919-9E0C78F78EC0}") = "LinkIt", "Assembly-CSharp.csproj", "{55BB88CA-5E56-D0EA-4259-1052193F78B6}"
 EndProject
+Project("{8BDD736A-90C6-D3A9-D919-9E0C78F78EC0}") = "LinkIt", "Assembly-UnityScript.unityproj", "{A74650DD-ECCE-C9B4-D9E0-4845192BCD86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,11 +15,15 @@ Global
 		{55BB88CA-5E56-D0EA-4259-1052193F78B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55BB88CA-5E56-D0EA-4259-1052193F78B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55BB88CA-5E56-D0EA-4259-1052193F78B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A74650DD-ECCE-C9B4-D9E0-4845192BCD86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A74650DD-ECCE-C9B4-D9E0-4845192BCD86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A74650DD-ECCE-C9B4-D9E0-4845192BCD86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A74650DD-ECCE-C9B4-D9E0-4845192BCD86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																		GlobalSection(MonoDevelopProperties) = preSolution
+																																					GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1

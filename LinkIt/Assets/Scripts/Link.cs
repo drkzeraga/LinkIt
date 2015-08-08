@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Link : MonoBehaviour 
 {
     public GameObject mTrailPrefab;
+    public GameObject mRepelPrefab;
 
     private GameObject mTrail = null;                                       //!< Trail
     private List< GameObject > mLinkedGems = new List< GameObject > ();     //!< Currently linked objects
@@ -45,37 +46,66 @@ public class Link : MonoBehaviour
         mTrail = null;
     }
 
+    // Get color
+    public static Color GetColor ( int type )
+    {
+        switch ( type )
+        {
+            case 0:
+                return Color.blue;
+            case 1:
+                return Color.green;
+            case 2:
+                return Color.red;
+            case 3:
+                return Color.yellow;
+            default:
+                return Color.white;
+        }
+    }
+
     // Set link colour
     void SetLinkColor ( int type )
     {
         if ( mTrail == null || mLinkType != -1 )
             return;
 
-        Color c;
-        switch ( type )
-        {
-            case 0:
-                c = Color.blue;
-                break;
-            case 1:
-                c = Color.green;
-                break;
-            case 2:
-                c = Color.red;
-                break;
-            case 3:
-                c = Color.yellow;
-                break;
-            default:
-                c = Color.white;
-                break;
-        }
-
+        Color c = GetColor ( type );
+       
         Material trail = mTrail.GetComponent< TrailRenderer > ().material;
 
         // Set the color of the material to tint the trail.
         if ( trail != null )
             trail.SetColor( "_Color", c );
+
+        ParticleSystem ps = mTrail.GetComponent< ParticleSystem > ();
+        if ( ps != null )
+        {
+            ps.startColor = c;
+        }
+    }
+
+    // Create Repel
+    void CreateRepel ( GameObject g, int type )
+    {
+        if ( mRepelPrefab == null )
+            return;
+
+        GameObject e = ( GameObject )Instantiate ( mRepelPrefab, g.transform.position, Quaternion.identity );
+        e.transform.parent = g.transform;
+        e.transform.localScale = Vector3.one;
+
+        ParticleSystem ps = e.GetComponent< ParticleSystem > ();
+
+        if ( ps != null )
+        {
+            ps.startColor = Link.GetColor( type );
+            Destroy ( e, ps.duration + Time.fixedDeltaTime );
+        }
+        else
+        {
+            Destroy ( e );
+        }
     }
 
     // Link gems
@@ -151,6 +181,7 @@ public class Link : MonoBehaviour
                     {
                         DestoryLinkedGems ();
                         mFailLink = true;
+                        CreateRepel ( gem, g.mType );
                     }
                 }
                 else
@@ -162,6 +193,7 @@ public class Link : MonoBehaviour
                         { 
                             DestoryLinkedGems ();
                             mFailLink = true;
+                            CreateRepel ( gem, g.mType );
                         }
                     }
                 }
