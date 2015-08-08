@@ -8,7 +8,6 @@ public class GemSpawner : MonoBehaviour
 	public int mLaneCount = 1;
 	public float mSpawnInterval = 1.0f;
 	public float mDropSpeed = 1.0f;
-    public GameObject mExplosion;
 
 	private float mTimeElapsed = 0.0f;
 	private LinkedList< GameObject > mGems = new LinkedList< GameObject > ();
@@ -112,14 +111,14 @@ public class GemSpawner : MonoBehaviour
 			if ( c.transform.position.y <= -height ||
                  ( g != null && g.GetIsDestroyed() ) )
 			{
-                if ( g != null && g.GetIsDestroyed() )
+                if ( g != null && g.GetIsDestroyed() && g.mExplosion != null )
                 { 
-                    GameObject e = ( GameObject )Instantiate ( mExplosion, c.transform.position, Quaternion.identity );
+                    GameObject e = ( GameObject )Instantiate ( g.mExplosion, c.transform.position, Quaternion.identity );
                     ParticleSystem ps = e.GetComponent< ParticleSystem > ();
 
                     if ( ps != null )
                     {
-                        ps.startColor = Link.GetColor( g.mType );
+                        ps.startColor = g.mLinkColor;
                         Destroy ( e, ps.duration + Time.fixedDeltaTime );
                     }
                     else

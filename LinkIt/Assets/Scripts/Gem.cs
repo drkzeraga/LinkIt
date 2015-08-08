@@ -3,10 +3,13 @@ using System.Collections;
 
 public class Gem : MonoBehaviour 
 {
-    public int mType = 0;               //!< Type
+    public int mType = 0;                   //!< Type
+    public Color mLinkColor = Color.white;  //!< Link color
+    public GameObject mRepel;               //!< Repel
+    public GameObject mExplosion;           //!< Explosion
 
-    private bool mLinked = false;       //!< Is linked
-    private bool mDestroyed = false;    //!< Is destroyed
+    private bool mLinked = false;           //!< Is linked
+    private bool mDestroyed = false;        //!< Is destroyed
 
     // Get is linked
     public bool GetIsLinked ()

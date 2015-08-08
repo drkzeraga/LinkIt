@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class Link : MonoBehaviour 
 {
     public GameObject mTrailPrefab;
-    public GameObject mRepelPrefab;
 
     private GameObject mTrail = null;                                       //!< Trail
     private List< GameObject > mLinkedGems = new List< GameObject > ();     //!< Currently linked objects
@@ -46,31 +45,13 @@ public class Link : MonoBehaviour
         mTrail = null;
     }
 
-    // Get color
-    public static Color GetColor ( int type )
-    {
-        switch ( type )
-        {
-            case 0:
-                return Color.blue;
-            case 1:
-                return Color.green;
-            case 2:
-                return Color.red;
-            case 3:
-                return Color.yellow;
-            default:
-                return Color.white;
-        }
-    }
-
     // Set link colour
-    void SetLinkColor ( int type )
+    void SetLinkColor ( Gem g )
     {
         if ( mTrail == null || mLinkType != -1 )
             return;
 
-        Color c = GetColor ( type );
+        Color c = g.mLinkColor;
        
         Material trail = mTrail.GetComponent< TrailRenderer > ().material;
 
@@ -86,12 +67,12 @@ public class Link : MonoBehaviour
     }
 
     // Create Repel
-    void CreateRepel ( GameObject g, int type )
+    void CreateRepel ( GameObject g, Gem gem )
     {
-        if ( mRepelPrefab == null )
+        if ( gem.mRepel == null )
             return;
 
-        GameObject e = ( GameObject )Instantiate ( mRepelPrefab, g.transform.position, Quaternion.identity );
+        GameObject e = ( GameObject )Instantiate ( gem.mRepel, g.transform.position, Quaternion.identity );
         e.transform.parent = g.transform;
         e.transform.localScale = Vector3.one;
 
@@ -99,7 +80,7 @@ public class Link : MonoBehaviour
 
         if ( ps != null )
         {
-            ps.startColor = Link.GetColor( type );
+            ps.startColor = gem.mLinkColor;
             Destroy ( e, ps.duration + Time.fixedDeltaTime );
         }
         else
@@ -149,7 +130,7 @@ public class Link : MonoBehaviour
                         g.SetIsLinked ( true );
                         mLinkedGems.Add( gem );
 
-                        SetLinkColor ( g.mType );
+                        SetLinkColor ( g );
                         mLinkType = g.mType;
                     }
                 }
@@ -163,7 +144,7 @@ public class Link : MonoBehaviour
                             g.SetIsLinked ( true );
                             mLinkedGems.Add( gem );
 
-                            SetLinkColor ( g.mType );
+                            SetLinkColor ( g );
                             mLinkType = g.mType;
                         }
                     }
@@ -181,7 +162,7 @@ public class Link : MonoBehaviour
                     {
                         DestoryLinkedGems ();
                         mFailLink = true;
-                        CreateRepel ( gem, g.mType );
+                        CreateRepel ( gem, g );
                     }
                 }
                 else
@@ -193,7 +174,7 @@ public class Link : MonoBehaviour
                         { 
                             DestoryLinkedGems ();
                             mFailLink = true;
-                            CreateRepel ( gem, g.mType );
+                            CreateRepel ( gem, g );
                         }
                     }
                 }
