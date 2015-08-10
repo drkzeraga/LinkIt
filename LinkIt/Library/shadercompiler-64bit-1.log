@@ -1,3 +1,35 @@
 Base path: C:/Program Files/Unity/Editor/Data
-Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-12436
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-1-7240
 Cmd: getPlatforms
+Cmd: preprocess
+  insize=4796 outsize=2973 ok=1
+Cmd: preprocess
+  insize=13772 outsize=8527 ok=1
+Cmd: preprocess
+  insize=8788 outsize=5672 ok=1
+Cmd: preprocess
+  insize=10393 outsize=5199 ok=1
+Cmd: preprocess
+  insize=18899 outsize=13767 ok=1
+Cmd: preprocess
+  insize=6225 outsize=3938 ok=1
+Cmd: preprocess
+  insize=14105 outsize=9470 ok=1
+Cmd: preprocess
+  insize=5632 outsize=3551 ok=1
+Cmd: preprocess
+  insize=11516 outsize=5670 ok=1
+Cmd: preprocess
+  insize=19065 outsize=10312 ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=1642 outsize=1290 kw=SOFTPARTICLES_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1642 outsize=924 kw=SOFTPARTICLES_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=1705 outsize=1290 kw=SOFTPARTICLES_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=1705 outsize=924 kw=SOFTPARTICLES_OFF ok=1
+Cmd: compileSnippet
+  api=4 type=0 insize=818 outsize=778 kw= ok=1
+Cmd: compileSnippet
+  api=4 type=1 insize=818 outsize=510 kw= ok=1
