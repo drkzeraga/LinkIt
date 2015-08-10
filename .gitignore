@@ -1,3 +1,4 @@
-LinkIt/Library/**
+LinkIt/Library/
 *.sln
 *.suo
+*.bin
