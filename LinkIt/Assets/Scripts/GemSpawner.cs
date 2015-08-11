@@ -28,6 +28,9 @@ public class GemSpawner : MonoBehaviour
             if ( g != null )
                 g.mType = i;
         }
+
+        //HACKKK: Seeding with a default value
+        Random.seed = 0;
 	}
 	
 	// Update is called once per frame
