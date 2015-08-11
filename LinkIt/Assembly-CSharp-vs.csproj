@@ -52,6 +52,7 @@
      <Compile Include="Assets\Scripts\Gem.cs" />
      <Compile Include="Assets\Scripts\GemSpawner.cs" />
      <Compile Include="Assets\Scripts\Link.cs" />
+     <Compile Include="Assets\Scripts\ScoreKeeper.cs" />
      <None Include="Assets\Utility Shaders Free\Shaders\USV1 Preview Blur.shader" />
      <None Include="Assets\Utility Shaders Free\Shaders\USV1 Preview DBlur.shader" />
      <None Include="Assets\Utility Shaders Free\Shaders\USV1 Preview Distort Texture.shader" />

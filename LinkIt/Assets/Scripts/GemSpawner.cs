@@ -91,6 +91,9 @@ public class GemSpawner : MonoBehaviour
 
 	void UpdateGems ()
 	{
+        GameObject scoreKeeperObj = GameObject.Find ( "ScoreKeeper" );
+        ScoreKeeper scoreKeeper = ( scoreKeeperObj != null ) ? scoreKeeperObj.GetComponent< ScoreKeeper > () : null;
+
 		// Assume camera position is at ( 0 , y, z )
 		float height = GetWorldHeight();
 		float dropDistance = mDropSpeed *  Time.fixedDeltaTime;
@@ -125,6 +128,10 @@ public class GemSpawner : MonoBehaviour
                     {
                         Destroy ( e );
                     }
+                }
+                else
+                {
+                    scoreKeeper.ZeroCombo();
                 }
 
 				mGems.Remove( c );

@@ -19,9 +19,15 @@ public class Link : MonoBehaviour
     }
 
     // Just started linking?
-    bool JustStartedLinking()
+    bool JustStartedLinking ()
     {
         return Input.GetMouseButtonDown ( 0 );
+    }
+
+    // Just finish linking?
+    bool JustFinishLinking ()
+    {
+        return Input.GetMouseButtonUp ( 0 );
     }
 
     // Create link
@@ -160,8 +166,8 @@ public class Link : MonoBehaviour
                 {
                     if ( wCollider.bounds.Contains( ( Vector2 )mPrevPosition ) )
                     {
-                        DestoryLinkedGems ();
                         mFailLink = true;
+                        DestoryLinkedGems();
                         CreateRepel ( gem, g );
                     }
                 }
@@ -172,8 +178,8 @@ public class Link : MonoBehaviour
                     {
                         if ( intersectDistance >= 0.0f && distance >= intersectDistance )
                         { 
-                            DestoryLinkedGems ();
                             mFailLink = true;
+                            DestoryLinkedGems();
                             CreateRepel ( gem, g );
                         }
                     }
@@ -185,22 +191,42 @@ public class Link : MonoBehaviour
     // Destory all currently linked gems
     void DestoryLinkedGems ()
     {
+        GameObject scoreKeeperObj = GameObject.Find ( "ScoreKeeper" );
+        ScoreKeeper scoreKeeper = ( scoreKeeperObj != null ) ? scoreKeeperObj.GetComponent< ScoreKeeper > () : null;
+
         bool destory = mLinkedGems.Count >= 3;
+
+        if ( destory )
+        {
+            scoreKeeper.AddCombo ( ( uint )mLinkedGems.Count );
+            scoreKeeper.AddScore ( ( uint )mLinkedGems.Count );
+        }
+
         foreach ( var gem in mLinkedGems )
         {
-            Gem g = gem.GetComponent< Gem >();
-            //  @todo: Destroy linked gems if more than 3
+            Gem g = gem.GetComponent< Gem > ();
             if ( g != null )
             {
                 if ( destory )
+                {
                     g.SetIsDestroyed ( true );
+                }
                 else
+                {
                     g.SetIsLinked ( false );
+                }
+
+                // @todo: debug
+                if ( mFailLink )
+                    CreateRepel ( gem, g );
             }
         }
 
         mLinkedGems.Clear();
         mLinkType = -1;
+
+        if ( mFailLink || ( JustFinishLinking () && !destory ) )
+            scoreKeeper.ZeroCombo ();
     }
 
 	// Update is called once per frame
