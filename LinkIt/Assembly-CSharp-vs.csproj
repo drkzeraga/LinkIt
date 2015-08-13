@@ -50,6 +50,7 @@
      <Compile Include="Assets\Fx Explosion Pack\Script\csLightControl.cs" />
      <Compile Include="Assets\Scripts\FollowCursor.cs" />
      <Compile Include="Assets\Scripts\Gem.cs" />
+     <Compile Include="Assets\Scripts\GemManager.cs" />
      <Compile Include="Assets\Scripts\GemSpawner.cs" />
      <Compile Include="Assets\Scripts\Link.cs" />
      <Compile Include="Assets\Scripts\Networking.cs" />

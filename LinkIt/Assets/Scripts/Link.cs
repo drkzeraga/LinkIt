@@ -125,12 +125,12 @@ public class Link : MonoBehaviour
         if ( JustStartedLinking() )
             return;
 
-        GameObject spawnerObj = GameObject.Find ( "GemSpawner" );
-        if ( spawnerObj == null )
+        GameObject gemManagerObj = GameObject.Find ( "GemManager" );
+        if ( gemManagerObj == null )
             return;
 
-        GemSpawner spawner = spawnerObj.GetComponent< GemSpawner > ();
-        if ( spawner == null )
+        GemManager gemManager = gemManagerObj.GetComponent< GemManager > ();
+        if ( gemManager == null )
             return;
 
         Vector2 direction = ( Vector2 )transform.position - ( Vector2 )mPrevPosition;
@@ -138,7 +138,7 @@ public class Link : MonoBehaviour
         direction.Normalize ();
         Ray r = new Ray ( ( Vector2 )mPrevPosition, direction );
 
-        foreach ( var gem in spawner.GetAllGems() )
+        foreach ( var gem in gemManager.GetAllGems() )
         {
             Gem g = gem.GetComponent< Gem >();
             // If gem is linked, ignore

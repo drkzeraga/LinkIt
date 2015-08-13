@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class GemSpawner : MonoBehaviour 
 {
-	public GameObject[] mGemTypes;
+	//public GameObject[] mGemTypes;
 	public int   mLaneCount;
 	public float mSpawnFrequency;
 	public float mDropSpeed;
     public float mLaneCooldown;
 
-	private LinkedList< GameObject > mGems = new LinkedList< GameObject > ();
+	//private LinkedList< GameObject > mGems = new LinkedList< GameObject > ();
 	private float   mSpawnCounter = 0.0f;
     private float[] mLaneTimerArr;
     private bool    mIsLaneFull;
@@ -26,28 +26,18 @@ public class GemSpawner : MonoBehaviour
     public Text     spawnFreqText;
     public Text     dropSpeedText;
 
-    // Get All Gems
-    public LinkedList< GameObject > GetAllGems ()
-    {
-        return mGems;
-    }
+    private GemManager mGemManager = null;
 
 	// Use this for initialization
 	void Start () 
 	{
-        // Automated correction
-	    for ( int i = 0; i < mGemTypes.Length; ++i )
-        {
-            Gem g = mGemTypes[i].GetComponent< Gem >();
-            if ( g != null )
-                g.mType = i;
-        }
-
         //Init lane cooldow
         InitLane();
 
         //HACKKK: Seeding with a default value
         Random.seed = 0;
+
+        mGemManager = GameObject.Find( "GemManager" ).GetComponent< GemManager > ();
 	}
 	
 	// Update is called once per frame
@@ -62,24 +52,23 @@ public class GemSpawner : MonoBehaviour
         //Update the spawn
         UpdateSpawn();
 
-        //Update the gems
-		UpdateGems();
-
         //Update debug text
         UpdateDebugText();
+
+        mGemManager.SetDropSpeed( mDropSpeed );
 	}
 
 	// Get the next colour gem
 	int GetNextGem()
 	{
-		return Random.Range ( 0, mGemTypes.Length );
+		return Random.Range ( 0, mGemManager.GetGemTypeCount() );
 	}
 
 	// Get the next lane number
 	int GetNextLane()
 	{
         //Get an intial random lane
-        int randLane = Random.Range ( 0, Mathf.Max( 0, mLaneCount) );
+        int randLane = Random.Range ( 0, Mathf.Max( 1, mLaneCount ) );
         
         //This is the lane to be returned
         int choosenLane = randLane;
@@ -113,7 +102,7 @@ public class GemSpawner : MonoBehaviour
 
     bool IsLaneOnCooldown(int lane)
     {
-        Debug.Log(lane);
+        //Debug.Log(lane);
         return mLaneTimerArr[lane] > 0.0f;
     }
 
@@ -168,65 +157,18 @@ public class GemSpawner : MonoBehaviour
 		float minSpawnX = -( width - 1.0f );
 		float spawnWidth = -2.0f * minSpawnX;
 
-		float offset = minSpawnX + ( float )lane * spawnWidth / ( float )( mLaneCount + 1 );
+		float offset = minSpawnX + ( float )lane * spawnWidth / ( float )( mLaneCount - 1 );
+        if ( lane == mLaneCount - 1 )
+            Debug.Log( "Position = " + offset );
+
 		Vector3 spawnPos = Vector3.up * height+
 						   Vector3.right * offset;
 
-		mGems.AddLast( ( GameObject )( Instantiate ( mGemTypes [ color ], spawnPos, Quaternion.identity ) ) );
+		//mGems.AddLast ( ( GameObject )( Instantiate ( mGemTypes [ color ], spawnPos, Quaternion.identity ) ) );
+        mGemManager.AddGem( color, spawnPos );
 
         //Decrement spawn counter
         mSpawnCounter -= 1.0f;
-	}
-
-	void UpdateGems ()
-	{
-        GameObject scoreKeeperObj = GameObject.Find ( "ScoreKeeper" );
-        ScoreKeeper scoreKeeper = ( scoreKeeperObj != null ) ? scoreKeeperObj.GetComponent< ScoreKeeper > () : null;
-
-		// Assume camera position is at ( 0 , y, z )
-		float height = GetWorldHeight();
-		float dropDistance = mDropSpeed *  Time.fixedDeltaTime;
-
-		var current = mGems.First;
-		while ( current != mGems.Last )
-		{
-			GameObject c = current.Value;
-
-			current = current.Next;
-
-            // Not linked, we update position
-            Gem g = c.GetComponent< Gem > ();
-            if ( g == null || !g.GetIsLinked () )
-			    c.transform.position -= Vector3.up * dropDistance;
-
-			// Out of range
-			if ( c.transform.position.y <= -height ||
-                 ( g != null && g.GetIsDestroyed () ) )
-			{
-                if ( g != null && g.GetIsDestroyed () && g.mExplosion != null )
-                { 
-                    GameObject e = ( GameObject )Instantiate ( g.mExplosion, c.transform.position, Quaternion.identity );
-                    ParticleSystem ps = e.GetComponent< ParticleSystem > ();
-
-                    if ( ps != null )
-                    {
-                        ps.startColor = g.mLinkColor;
-                        Destroy ( e, ps.duration + Time.fixedDeltaTime );
-                    }
-                    else
-                    {
-                        Destroy ( e );
-                    }
-                }
-                else
-                {
-                    scoreKeeper.ZeroCombo ();
-                }
-
-				mGems.Remove ( c );
-				Destroy ( c );
-			}
-		}
 	}
 
     void InitLane()
