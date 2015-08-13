@@ -95,6 +95,29 @@ public class Link : MonoBehaviour
         }
     }
 
+    // Create gain score
+    void CreateGainScore ( GameObject g, Gem gem, uint score )
+    {
+        if ( gem.mGainScore == null )
+            return;
+
+        GameObject e = ( GameObject )Instantiate ( gem.mGainScore, g.transform.position, Quaternion.identity );
+
+        TextMesh t = e.GetComponent< TextMesh > ();
+        TextFadeOut f = e.GetComponent< TextFadeOut > ();
+
+        if ( t != null && f != null )
+        {
+            //t.color = gem.mLinkColor;
+            t.text = score.ToString ();
+            Destroy ( e, f.mLifeTime + Time.fixedDeltaTime );
+        }
+        else
+        {
+            Destroy ( e );
+        }
+    }
+
     // Link gems
     void LinkGems ()
     {
@@ -195,11 +218,13 @@ public class Link : MonoBehaviour
         ScoreKeeper scoreKeeper = ( scoreKeeperObj != null ) ? scoreKeeperObj.GetComponent< ScoreKeeper > () : null;
 
         bool destory = mLinkedGems.Count >= 3;
-
+        uint score = 0;
         if ( destory )
         {
             scoreKeeper.AddCombo ( ( uint )mLinkedGems.Count );
-            scoreKeeper.AddScore ( ( uint )mLinkedGems.Count );
+            score = ScoreKeeper.GetGainScore ( mLinkedGems.Count );
+            scoreKeeper.AddScore ( score );
+            score /= ( uint )mLinkedGems.Count;
         }
 
         foreach ( var gem in mLinkedGems )
@@ -210,6 +235,7 @@ public class Link : MonoBehaviour
                 if ( destory )
                 {
                     g.SetIsDestroyed ( true );
+                    CreateGainScore( gem, g, score );
                 }
                 else
                 {

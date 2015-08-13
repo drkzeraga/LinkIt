@@ -5,9 +5,11 @@
 # Folders:
 LinkIt/Library/
 LinkIt/obj/
+LinkIt/Temp/
 
 # Filetypes:
 *.sln
 *.suo
 
 # ================================
+*.info

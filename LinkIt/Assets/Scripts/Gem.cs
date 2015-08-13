@@ -7,6 +7,7 @@ public class Gem : MonoBehaviour
     public Color mLinkColor = Color.white;  //!< Link color
     public GameObject mRepel;               //!< Repel
     public GameObject mExplosion;           //!< Explosion
+    public GameObject mGainScore;           //!< Score gain
 
     private bool mLinked = false;           //!< Is linked
     private bool mDestroyed = false;        //!< Is destroyed

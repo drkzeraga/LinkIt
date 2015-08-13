@@ -28,6 +28,9 @@ public class GemSpawner : MonoBehaviour
             if ( g != null )
                 g.mType = i;
         }
+
+        //HACKKK: Seeding with a default value
+        Random.seed = 0;
 	}
 	
 	// Update is called once per frame
@@ -106,15 +109,15 @@ public class GemSpawner : MonoBehaviour
 			current = current.Next;
 
             // Not linked, we update position
-            Gem g = c.GetComponent< Gem >();
-            if ( g == null || !g.GetIsLinked() )
+            Gem g = c.GetComponent< Gem > ();
+            if ( g == null || !g.GetIsLinked () )
 			    c.transform.position -= Vector3.up * dropDistance;
 
 			// Out of range
 			if ( c.transform.position.y <= -height ||
-                 ( g != null && g.GetIsDestroyed() ) )
+                 ( g != null && g.GetIsDestroyed () ) )
 			{
-                if ( g != null && g.GetIsDestroyed() && g.mExplosion != null )
+                if ( g != null && g.GetIsDestroyed () && g.mExplosion != null )
                 { 
                     GameObject e = ( GameObject )Instantiate ( g.mExplosion, c.transform.position, Quaternion.identity );
                     ParticleSystem ps = e.GetComponent< ParticleSystem > ();
@@ -131,11 +134,11 @@ public class GemSpawner : MonoBehaviour
                 }
                 else
                 {
-                    scoreKeeper.ZeroCombo();
+                    scoreKeeper.ZeroCombo ();
                 }
 
-				mGems.Remove( c );
-				Destroy( c );
+				mGems.Remove ( c );
+				Destroy ( c );
 			}
 		}
 	}
