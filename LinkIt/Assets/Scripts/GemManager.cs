@@ -28,8 +28,11 @@ public class GemManager : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () 
+	void Update () 
     {
+
+
+
         // Update the gems
         UpdateGems();
 	}
@@ -56,17 +59,13 @@ public class GemManager : MonoBehaviour
 		float height = GetWorldHeight();
 		float dropDistance = mDropSpeed *  Time.fixedDeltaTime;
 
-		var current = mGems.First;
-		while ( current != mGems.Last )
+        //Iteriate through the whole list of gems
+		foreach (var c in mGems)
 		{
-			GameObject c = current.Value;
-
-			current = current.Next;
-
             // Not linked, we update position
             Gem g = c.GetComponent< Gem > ();
-            if ( g == null || !g.GetIsLinked () )
-			    c.transform.position -= Vector3.up * dropDistance;
+            if (g == null || !g.GetIsLinked())
+                c.transform.position -= Vector3.up * dropDistance;
 
 			// Out of range
 			if ( c.transform.position.y <= -height ||

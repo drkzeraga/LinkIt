@@ -9,6 +9,9 @@ public class Gem : MonoBehaviour
     public GameObject mExplosion;           //!< Explosion
     public GameObject mGainScore;           //!< Score gain
 
+    public GameObject mGemBaseType;          //!< Gem base prefab
+    private GameObject mGemBase;             //!< Gem base instance
+
     private bool mLinked = false;           //!< Is linked
     private bool mDestroyed = false;        //!< Is destroyed
 
@@ -39,7 +42,8 @@ public class Gem : MonoBehaviour
 	// Use this for initialization
 	void Start () 
     {
-	
+        //Create gem base obj
+        InitGemBase();
 	}
 	
 	// Update is called once per frame
@@ -47,4 +51,13 @@ public class Gem : MonoBehaviour
     {
 	
 	}
+
+    //Create the gem base obj
+    // and attached it to gem
+    void InitGemBase()
+    {
+        //Initialize the gem obj
+        mGemBase = (GameObject)Instantiate(mGemBaseType, transform.position, transform.rotation);
+        mGemBase.transform.parent = transform;
+    }
 }

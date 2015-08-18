@@ -55,6 +55,7 @@ public class GemSpawner : MonoBehaviour
         //Update debug text
         UpdateDebugText();
 
+        //Update gem drop speed
         mGemManager.SetDropSpeed( mDropSpeed );
 	}
 

@@ -148,7 +148,7 @@ public class Link : MonoBehaviour
             // Test for collision
             if ( mLinkType == -1 || mLinkType == g.mType )
             {
-                CircleCollider2D cCollider = gem.GetComponent< CircleCollider2D > ();
+                CircleCollider2D cCollider = gem.GetComponentInChildren< CircleCollider2D > ();
                 if ( cCollider == null )
                     continue;
             
@@ -181,7 +181,7 @@ public class Link : MonoBehaviour
             }
             else
             {
-                BoxCollider2D wCollider = gem.GetComponent< BoxCollider2D > ();
+                BoxCollider2D wCollider = gem.GetComponentInChildren<BoxCollider2D>();
                 if ( wCollider == null )
                     continue;
 
