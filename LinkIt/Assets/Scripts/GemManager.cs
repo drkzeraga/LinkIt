@@ -7,6 +7,7 @@ public class GemManager : MonoBehaviour
     public GameObject[] mGemTypes;
 
     private LinkedList< GameObject > mGems = new LinkedList< GameObject > ();
+    private LinkedList<GameObject> mGemsToBeRemoved = new LinkedList<GameObject>();
     private float mDropSpeed = 0.0f;
 
     // Get All Gems
@@ -28,13 +29,13 @@ public class GemManager : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	void FixedUpdate () 
     {
-
-
-
         // Update the gems
         UpdateGems();
+
+        //Update and remove destroyed gems
+        UpdateDestroyGems();
 	}
 
     // Get the camera view height in world space
@@ -91,11 +92,31 @@ public class GemManager : MonoBehaviour
                     scoreKeeper.ZeroCombo ();
                 }
 
-				mGems.Remove ( c );
-				Destroy ( c );
+                DestroyGem(c);
 			}
 		}
 	}
+
+    //Destroy the gem
+    void DestroyGem(GameObject obj)
+    {
+        mGemsToBeRemoved.AddLast(obj);
+    }
+
+    //Remove the gems that were destroyed
+    void UpdateDestroyGems()
+    {
+        //Iteriate through and remove the gem
+        foreach(var gem in mGemsToBeRemoved)
+        {
+            mGems.Remove(gem);
+            Destroy(gem);
+        }
+
+        //Clear the list
+        mGemsToBeRemoved.Clear();
+        
+    }
 
     public void AddGem ( int type, Vector3 position )
     {
