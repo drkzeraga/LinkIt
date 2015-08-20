@@ -59,5 +59,6 @@ public class Gem : MonoBehaviour
         //Initialize the gem obj
         mGemBase = (GameObject)Instantiate(mGemBaseType, transform.position, transform.rotation);
         mGemBase.transform.parent = transform;
+        mGemBase.transform.localScale = Vector3.one;
     }
 }

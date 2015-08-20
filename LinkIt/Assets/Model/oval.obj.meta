@@ -1,15 +1,17 @@
 fileFormatVersion: 2
-guid: 31e5c893c59aa724eb05fea443f7ba30
-timeCreated: 1440074859
+guid: 6b5ef7ce001d1474fa0f299a1d7c4cf2
+timeCreated: 1440076304
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Diamond001
+    100000: Ellipse001
+    100002: //RootNode
+    400000: Ellipse001
+    400002: //RootNode
+    2300000: Ellipse001
+    3300000: Ellipse001
+    4300000: Ellipse001
   materials:
     importMaterials: 1
     materialName: 0
