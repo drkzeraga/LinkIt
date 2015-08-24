@@ -125,11 +125,11 @@ public class Link : MonoBehaviour
         if ( JustStartedLinking() )
             return;
 
-        GameObject gemManagerObj = GameObject.Find ( "GemManager" );
-        if ( gemManagerObj == null )
+        GameObject singletons = GameObject.Find ( "GameSingletons" );
+        if ( singletons == null )
             return;
 
-        GemManager gemManager = gemManagerObj.GetComponent< GemManager > ();
+        GemManager gemManager = singletons.GetComponent< GemManager > ();
         if ( gemManager == null )
             return;
 
@@ -214,8 +214,8 @@ public class Link : MonoBehaviour
     // Destory all currently linked gems
     void DestoryLinkedGems ()
     {
-        GameObject scoreKeeperObj = GameObject.Find ( "ScoreKeeper" );
-        ScoreKeeper scoreKeeper = ( scoreKeeperObj != null ) ? scoreKeeperObj.GetComponent< ScoreKeeper > () : null;
+        GameObject singletons = GameObject.Find ( "GameSingletons" );
+        ScoreKeeper scoreKeeper = ( singletons != null ) ? singletons.GetComponent< ScoreKeeper > () : null;
 
         bool destory = mLinkedGems.Count >= 3;
         uint score = 0;

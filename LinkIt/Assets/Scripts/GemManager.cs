@@ -53,8 +53,7 @@ public class GemManager : MonoBehaviour
 
     void UpdateGems ()
 	{
-        GameObject scoreKeeperObj = GameObject.Find ( "ScoreKeeper" );
-        ScoreKeeper scoreKeeper = ( scoreKeeperObj != null ) ? scoreKeeperObj.GetComponent< ScoreKeeper > () : null;
+        ScoreKeeper scoreKeeper = GetComponent< ScoreKeeper > ();
 
 		// Assume camera position is at ( 0 , y, z )
 		float height = GetWorldHeight();

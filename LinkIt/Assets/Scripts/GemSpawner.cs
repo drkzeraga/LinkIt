@@ -37,7 +37,7 @@ public class GemSpawner : MonoBehaviour
         //HACKKK: Seeding with a default value
         Random.seed = 0;
 
-        mGemManager = GameObject.Find( "GemManager" ).GetComponent< GemManager > ();
+        mGemManager = GetComponent< GemManager > ();
 	}
 	
 	// Update is called once per frame
