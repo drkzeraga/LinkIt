@@ -29,7 +29,7 @@ public class ScoreKeeper : MonoBehaviour
     {
         GameObject c = GameObject.Find ( "ComboText" );
         UnityEngine.UI.Text ctext = c.GetComponent< UnityEngine.UI.Text > ();
-        ctext.text = mCombo.ToString ();
+        ctext.text = "Combo: " + mCombo.ToString ();
     }
 
     // Set score in UI
@@ -37,7 +37,7 @@ public class ScoreKeeper : MonoBehaviour
     {
         GameObject s = GameObject.Find ( "ScoreText" );
         UnityEngine.UI.Text stext = s.GetComponent< UnityEngine.UI.Text > ();
-        stext.text = mScore.ToString ();
+        stext.text = "Score: " + mScore.ToString ();
     }
 
     // Add score

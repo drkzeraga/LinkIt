@@ -54,17 +54,18 @@ public class GemManager : MonoBehaviour
     void UpdateGems ()
 	{
         ScoreKeeper scoreKeeper = GetComponent< ScoreKeeper > ();
+        HealthKeeper healthKeeper = GetComponent< HealthKeeper > ();
 
 		// Assume camera position is at ( 0 , y, z )
 		float height = GetWorldHeight();
 		float dropDistance = mDropSpeed *  Time.fixedDeltaTime;
 
         //Iteriate through the whole list of gems
-		foreach (var c in mGems)
+		foreach ( var c in mGems )
 		{
             // Not linked, we update position
             Gem g = c.GetComponent< Gem > ();
-            if (g == null || !g.GetIsLinked())
+            if ( g == null || !g.GetIsLinked() )
                 c.transform.position -= Vector3.up * dropDistance;
 
 			// Out of range
@@ -89,9 +90,10 @@ public class GemManager : MonoBehaviour
                 else
                 {
                     scoreKeeper.ZeroCombo ();
+                    healthKeeper.AddHealth ( -5 );
                 }
 
-                DestroyGem(c);
+                DestroyGem( c );
 			}
 		}
 	}

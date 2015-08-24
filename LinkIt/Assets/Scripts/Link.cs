@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿//#define DESTORY_TRAIL_BY_TIME
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,6 +12,7 @@ public class Link : MonoBehaviour
     private Vector3 mPrevPosition;
     private int mLinkType = -1;                                             //!< Current link type
     private bool mFailLink = false;
+    private float mLinkTime = 0.0f;
 
     // Is linking?
     bool IsLinking ()
@@ -48,6 +50,21 @@ public class Link : MonoBehaviour
             return;
 
         Destroy( mTrail );
+        mTrail = null;
+    }
+
+    // Destroy link
+    void DestorySuccessLink ()
+    {
+        if ( mTrail == null )
+            return;
+
+        TrailRenderer t = mTrail.GetComponent< TrailRenderer > ();
+        t.time = mLinkTime;
+        Destroy ( mTrail, mLinkTime + Time.fixedDeltaTime );
+        mLinkTime = 0.0f;
+
+        //Destroy( mTrail );
         mTrail = null;
     }
 
@@ -212,7 +229,7 @@ public class Link : MonoBehaviour
     }
 
     // Destory all currently linked gems
-    void DestoryLinkedGems ()
+    bool DestoryLinkedGems ()
     {
         GameObject singletons = GameObject.Find ( "GameSingletons" );
         ScoreKeeper scoreKeeper = ( singletons != null ) ? singletons.GetComponent< ScoreKeeper > () : null;
@@ -253,6 +270,8 @@ public class Link : MonoBehaviour
 
         if ( mFailLink || ( JustFinishLinking () && !destory ) )
             scoreKeeper.ZeroCombo ();
+
+        return destory;
     }
 
 	// Update is called once per frame
@@ -270,6 +289,7 @@ public class Link : MonoBehaviour
 
                 // Link Logic
                 LinkGems ();
+                mLinkTime += Time.fixedDeltaTime;
                 mPrevPosition = transform.position;
             }
             else
@@ -280,12 +300,19 @@ public class Link : MonoBehaviour
         // Not Linking
         else
         {
-            DestoryLink ();
-
             // Unlink logic
+#if DESTORY_TRAIL_BY_TIME
+            if( DestoryLinkedGems () )
+                DestorySuccessLink();
+            else
+                DestoryLink();
+#else
             DestoryLinkedGems ();
+            DestoryLink();
+#endif
 
             mFailLink = false;
+            mLinkTime = 0.0f;
         }
 	}
 }
