@@ -79,7 +79,7 @@ public class GemManager : MonoBehaviour
 
                     if ( ps != null )
                     {
-                        ps.startColor = g.mLinkColor;
+                        ps.startColor = g.mParticleColor;
                         Destroy ( e, ps.duration + Time.fixedDeltaTime );
                     }
                     else

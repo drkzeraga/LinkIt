@@ -80,7 +80,9 @@ public class Link : MonoBehaviour
 
         // Set the color of the material to tint the trail.
         if ( trail != null )
-            trail.SetColor( "_Color", c );
+        {
+            trail.SetColor( "_TintColor", c );
+        }
 
         ParticleSystem ps = mTrail.GetComponent< ParticleSystem > ();
         if ( ps != null )
@@ -103,7 +105,7 @@ public class Link : MonoBehaviour
 
         if ( ps != null )
         {
-            ps.startColor = gem.mLinkColor;
+            ps.startColor = gem.mParticleColor;
             Destroy ( e, ps.duration + Time.fixedDeltaTime );
         }
         else
@@ -125,7 +127,7 @@ public class Link : MonoBehaviour
 
         if ( t != null && f != null )
         {
-            //t.color = gem.mLinkColor;
+            //t.color = gem.mParticleColor;
             t.text = score.ToString ();
             Destroy ( e, f.mLifeTime + Time.fixedDeltaTime );
         }

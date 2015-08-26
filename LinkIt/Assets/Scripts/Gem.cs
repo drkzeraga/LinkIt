@@ -3,18 +3,19 @@ using System.Collections;
 
 public class Gem : MonoBehaviour 
 {
-    public int mType = 0;                   //!< Type
-    public float mScaleFactor = 1.5f;       //!< Up scale factor
-    public Color mLinkColor = Color.white;  //!< Link color
-    public GameObject mRepel;               //!< Repel
-    public GameObject mExplosion;           //!< Explosion
-    public GameObject mGainScore;           //!< Score gain
+    public int mType = 0;                       //!< Type
+    public float mScaleFactor = 1.5f;           //!< Up scale factor
+    public Color mLinkColor = Color.white;      //!< Link color
+    public Color mParticleColor = Color.white;  //!< Particle color
+    public GameObject mRepel;                   //!< Repel
+    public GameObject mExplosion;               //!< Explosion
+    public GameObject mGainScore;               //!< Score gain
 
-    public GameObject mGemBaseType;         //!< Gem base prefab
-    private GameObject mGemBase;            //!< Gem base instance
+    public GameObject mGemBaseType;             //!< Gem base prefab
+    private GameObject mGemBase;                //!< Gem base instance
 
-    private bool mLinked = false;           //!< Is linked
-    private bool mDestroyed = false;        //!< Is destroyed
+    private bool mLinked = false;               //!< Is linked
+    private bool mDestroyed = false;            //!< Is destroyed
 
     // Get is linked
     public bool GetIsLinked ()
