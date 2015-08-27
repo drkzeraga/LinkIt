@@ -30,6 +30,10 @@ public class GemManager : MonoBehaviour
         }
 
         GemCount = new int[mGemTypes.Length];
+        for ( int i = 0; i < mGemTypes.Length; ++i)
+        {
+            GemCount[i] = 0;
+        }
 	}
 	
 	// Update is called once per frame

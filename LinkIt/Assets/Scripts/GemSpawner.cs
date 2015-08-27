@@ -256,8 +256,8 @@ public class GemSpawner : MonoBehaviour
     {
         //update the max list size
         //  calculated as the number of gems being spawn per second multipied
-        //  by the time needed for the gem to travel half of the screen rounded up
-        SpawnListLimit = Mathf.CeilToInt(mSpawnFrequency * mDropSpeed * 0.5f);
+        //  by the time needed for the gem to travel quarter of the screen rounded up
+        SpawnListLimit = Mathf.CeilToInt(mSpawnFrequency * mDropSpeed * 0.25f);
     }
 
     void GenerateSpawnList()
@@ -332,12 +332,13 @@ public class GemSpawner : MonoBehaviour
         SpawnListIndex = 0;
     }
 
+    //Shuffle the spawn list
     void ShuffleSpawnList()
     {
         for (int i=0; i<SpawnList.Count; ++i)
         {
             int tmp = SpawnList[i];
-            int r = Random.Range(0, SpawnList.Count);
+            int r = Random.Range(i, SpawnList.Count);
 
             SpawnList[i] = SpawnList[r];
             SpawnList[r] = tmp;
