@@ -18,10 +18,15 @@ public class GemSpawner : MonoBehaviour
 
     const int       INVALID_LANE = -1;
 
+    private List<int>   SpawnList = new List<int>();
+    private int         SpawnListLimit;
+    private int         SpawnListIndex = 0;
+    private int         SpawnGroupMaxSize = 3;    //Max number of gem to spawn
+
 
     //DEBUG STUFF
     const float     SPAWN_FREQ_DELTA = 0.25f;
-    const float     DROP_SPEED_DELTA = 0.1f;
+    const float     DROP_SPEED_DELTA = 0.02f;
 
     public Text     spawnFreqText;
     public Text     dropSpeedText;
@@ -43,6 +48,9 @@ public class GemSpawner : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate () 
 	{
+        //Update the spawn variables
+        UpdateSpawnVariables();
+
         //Handle input
         HandleInput();
 
@@ -62,7 +70,16 @@ public class GemSpawner : MonoBehaviour
 	// Get the next colour gem
 	int GetNextGem()
 	{
-		return Random.Range ( 0, mGemManager.GetGemTypeCount() );
+        //If the spawn list is used
+        if (SpawnListIndex >= SpawnList.Count)
+        {
+            //Regenerate the spawn list
+            GenerateSpawnList();
+        }
+
+        //Return the gem at index
+        // and increment index
+		return SpawnList[SpawnListIndex++];
 	}
 
 	// Get the next lane number
@@ -159,8 +176,8 @@ public class GemSpawner : MonoBehaviour
 		float spawnWidth = -2.0f * minSpawnX;
 
 		float offset = minSpawnX + ( float )lane * spawnWidth / ( float )( mLaneCount - 1 );
-        if ( lane == mLaneCount - 1 )
-            Debug.Log( "Position = " + offset );
+        //if ( lane == mLaneCount - 1 )
+        //    Debug.Log( "Position = " + offset );
 
 		Vector3 spawnPos = Vector3.up * height+
 						   Vector3.right * offset;
@@ -233,5 +250,97 @@ public class GemSpawner : MonoBehaviour
     {
         spawnFreqText.text = "SpawnFreq: " + mSpawnFrequency;
         dropSpeedText.text = "DropSpeed: " + mDropSpeed;
+    }
+
+    void UpdateSpawnVariables()
+    {
+        //update the max list size
+        //  calculated as the number of gems being spawn per second multipied
+        //  by the time needed for the gem to travel half of the screen rounded up
+        SpawnListLimit = Mathf.CeilToInt(mSpawnFrequency * mDropSpeed * 0.5f);
+    }
+
+    void GenerateSpawnList()
+    {
+        //keep track of the number of gem per type spawn
+        var gemCountArray = new int[mGemManager.GetGemTypeCount()];
+
+        //type of gem to be spawn
+        int gemType, spawnGemGroupSize;
+
+        //Empty the old spawnList
+        SpawnList.Clear();
+
+        //while list is not full
+        while (SpawnList.Count < SpawnListLimit)
+        {
+            //roll a random gem type
+            gemType = Random.Range(0, mGemManager.GetGemTypeCount());
+
+            //Roll a random number of gems to spawn
+            // from 1 to SpawnGemSize
+            spawnGemGroupSize = 1 + Random.Range(0, SpawnGroupMaxSize);
+
+            //for every gem to be spawned
+            for (int i=0; i<spawnGemGroupSize; ++i)
+            {
+                //Push back the select gem type into the array
+                SpawnList.Add(gemType);
+
+                //increment gem count array
+                ++gemCountArray[gemType];
+            }
+        }
+
+        //at the end, do a check on the number of gems
+        for (int i = 0; i < mGemManager.GetGemTypeCount(); ++i)
+        {
+            //if we are adding gem of a type
+            if (gemCountArray[i] != 0)
+            {
+                //make sure there is a minimium of 3
+                while (gemCountArray[i] < 3)
+                {
+                    SpawnList.Add(i);
+                    ++gemCountArray[i];
+                }
+            }
+        }
+
+        //randomly swap around the gem type
+        ShuffleSpawnList();
+
+        //for in case player have only 2 gems of a type on screen
+        for (int i = 0; i < mGemManager.GetGemTypeCount(); ++i)
+        {
+            //Get the number of gems of type on screen
+            int numberOfGemsOfTypeOnScreen = mGemManager.GetGemCountOfType(i);
+
+            //if there are gems of that type 
+            if (numberOfGemsOfTypeOnScreen > 0)
+            {
+                //and the count is less than 3
+                for (; numberOfGemsOfTypeOnScreen<3; ++numberOfGemsOfTypeOnScreen)
+                {
+                    //insert the gem at the front so that it will spawn first
+                    SpawnList.Insert(0,i);
+                }
+            }
+        }
+
+        //reset the spawn index
+        SpawnListIndex = 0;
+    }
+
+    void ShuffleSpawnList()
+    {
+        for (int i=0; i<SpawnList.Count; ++i)
+        {
+            int tmp = SpawnList[i];
+            int r = Random.Range(0, SpawnList.Count);
+
+            SpawnList[i] = SpawnList[r];
+            SpawnList[r] = tmp;
+        }
     }
 }

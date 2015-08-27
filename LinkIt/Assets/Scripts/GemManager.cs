@@ -10,6 +10,8 @@ public class GemManager : MonoBehaviour
     private LinkedList<GameObject> mGemsToBeRemoved = new LinkedList<GameObject>();
     private float mDropSpeed = 0.0f;
 
+    private int[] GemCount;
+
     // Get All Gems
     public LinkedList< GameObject > GetAllGems ()
     {
@@ -26,6 +28,8 @@ public class GemManager : MonoBehaviour
             if ( g != null )
                 g.mType = i;
         }
+
+        GemCount = new int[mGemTypes.Length];
 	}
 	
 	// Update is called once per frame
@@ -110,6 +114,7 @@ public class GemManager : MonoBehaviour
         //Iteriate through and remove the gem
         foreach(var gem in mGemsToBeRemoved)
         {
+            GemCount[gem.GetComponent<Gem>().mType]--;
             mGems.Remove(gem);
             Destroy(gem);
         }
@@ -122,6 +127,7 @@ public class GemManager : MonoBehaviour
     public void AddGem ( int type, Vector3 position )
     {
         mGems.AddLast( ( GameObject )( Instantiate ( mGemTypes [ type ], position, Quaternion.identity ) ) );
+        GemCount[type]++;
     }
 
     public void SetDropSpeed ( float dropSpeed )
@@ -132,5 +138,21 @@ public class GemManager : MonoBehaviour
     public int GetGemTypeCount ()
     {
         return mGemTypes.Length;
+    }
+
+    public int GetTotalGemCount()
+    {
+        int result = 0;
+        for (int type = 0; type < mGemTypes.Length; ++type)
+        {
+            result += GemCount[type];
+        }
+
+        return result;
+    }
+
+    public int GetGemCountOfType(int type)
+    {
+        return GemCount[type];
     }
 }

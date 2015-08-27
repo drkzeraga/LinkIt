@@ -1,16 +1,17 @@
 fileFormatVersion: 2
-guid: d286fef81d0cd384299efc9927846807
-timeCreated: 1440074182
+guid: c4adf8a093e15bd41a032dceb61d71c4
+timeCreated: 1440659086
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: w
-    4300002: diamond
+    100000: Diamond001
+    100002: //RootNode
+    400000: Diamond001
+    400002: //RootNode
+    2300000: Diamond001
+    3300000: Diamond001
+    4300000: Diamond001
   materials:
     importMaterials: 1
     materialName: 0
