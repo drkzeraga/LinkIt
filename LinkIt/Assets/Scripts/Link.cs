@@ -6,8 +6,10 @@ using System.Collections.Generic;
 public class Link : MonoBehaviour 
 {
     public GameObject mTrailPrefab;
+    public GameObject mLinkPrefab;
 
     private GameObject mTrail = null;                                       //!< Trail
+    private GameObject mBridge = null;                                      //!< Bridge between gems
     private List< GameObject > mLinkedGems = new List< GameObject > ();     //!< Currently linked objects
     private Vector3 mPrevPosition;
     private int mLinkType = -1;                                             //!< Current link type
@@ -53,6 +55,24 @@ public class Link : MonoBehaviour
         mTrail = null;
     }
 
+    void CreateBridge ()
+    {
+        if ( mBridge == null )
+            mBridge = ( GameObject )Instantiate( mLinkPrefab, Vector3.zero, Quaternion.identity );
+    }
+
+    void MoveBridge ( Vector3 position )
+    {
+        if ( mBridge != null )
+            mBridge.transform.position = position;
+    }
+
+    void DestroyBridge ()
+    {
+        Destroy( mBridge );
+        mBridge = null;
+    }
+
     // Destroy link
     void DestorySuccessLink ()
     {
@@ -69,14 +89,14 @@ public class Link : MonoBehaviour
     }
 
     // Set link colour
-    void SetLinkColor ( Gem g )
+    void SetLinkColor ( GameObject link, Gem g )
     {
-        if ( mTrail == null || mLinkType != -1 )
+        if ( link == null || mLinkType != -1 )
             return;
 
         Color c = g.mLinkColor;
        
-        Material trail = mTrail.GetComponent< TrailRenderer > ().material;
+        Material trail = link.GetComponent< TrailRenderer > ().material;
 
         // Set the color of the material to tint the trail.
         if ( trail != null )
@@ -84,7 +104,7 @@ public class Link : MonoBehaviour
             trail.SetColor( "_TintColor", c );
         }
 
-        ParticleSystem ps = mTrail.GetComponent< ParticleSystem > ();
+        ParticleSystem ps = link.GetComponent< ParticleSystem > ();
         if ( ps != null )
         {
             ps.startColor = c;
@@ -137,6 +157,26 @@ public class Link : MonoBehaviour
         }
     }
 
+    void AddGemToLink ( GameObject gem, Gem g )
+    {
+        g.SetIsLinked ( true );
+        mLinkedGems.Add( gem );
+
+        SetLinkColor ( mTrail, g );
+
+        MoveBridge ( gem.transform.position );
+        SetLinkColor ( mBridge, g );
+
+        mLinkType = g.mType;
+    }
+
+    void FailLink ( GameObject gem, Gem g )
+    {
+        mFailLink = true;
+        DestoryLinkedGems();
+        CreateRepel ( gem, g );
+    }
+
     // Link gems
     void LinkGems ()
     {
@@ -174,13 +214,7 @@ public class Link : MonoBehaviour
                 if ( distance == 0.0f )
                 {
                     if ( cCollider.bounds.Contains( ( Vector2 )mPrevPosition ) )
-                    {
-                        g.SetIsLinked ( true );
-                        mLinkedGems.Add( gem );
-
-                        SetLinkColor ( g );
-                        mLinkType = g.mType;
-                    }
+                        AddGemToLink( gem, g );
                 }
                 else
                 {
@@ -188,13 +222,7 @@ public class Link : MonoBehaviour
                     if ( cCollider.bounds.IntersectRay( r, out intersectDistance ) )
                     {
                         if ( intersectDistance >= 0.0f && distance >= intersectDistance )
-                        { 
-                            g.SetIsLinked ( true );
-                            mLinkedGems.Add( gem );
-
-                            SetLinkColor ( g );
-                            mLinkType = g.mType;
-                        }
+                            AddGemToLink( gem, g );
                     }
                 }
             }
@@ -207,11 +235,7 @@ public class Link : MonoBehaviour
                 if ( distance == 0.0f )
                 {
                     if ( wCollider.bounds.Contains( ( Vector2 )mPrevPosition ) )
-                    {
-                        mFailLink = true;
-                        DestoryLinkedGems();
-                        CreateRepel ( gem, g );
-                    }
+                        FailLink ( gem, g );
                 }
                 else
                 {
@@ -219,11 +243,7 @@ public class Link : MonoBehaviour
                     if ( wCollider.bounds.IntersectRay( r, out intersectDistance ) )
                     {
                         if ( intersectDistance >= 0.0f && distance >= intersectDistance )
-                        { 
-                            mFailLink = true;
-                            DestoryLinkedGems();
-                            CreateRepel ( gem, g );
-                        }
+                            FailLink ( gem, g );
                     }
                 }
             }
@@ -288,6 +308,7 @@ public class Link : MonoBehaviour
                 transform.position = r.GetPoint ( Mathf.Abs( Camera.main.transform.position.z ) - Camera.main.nearClipPlane );
 
                 CreateLink ();
+                CreateBridge ();
 
                 // Link Logic
                 LinkGems ();
@@ -297,6 +318,7 @@ public class Link : MonoBehaviour
             else
             {
                 DestoryLink ();
+                DestroyBridge ();
             }
         }
         // Not Linking
@@ -312,7 +334,7 @@ public class Link : MonoBehaviour
             DestoryLinkedGems ();
             DestoryLink();
 #endif
-
+            DestroyBridge();
             mFailLink = false;
             mLinkTime = 0.0f;
         }
