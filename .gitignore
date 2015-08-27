@@ -6,6 +6,7 @@
 LinkIt/Library/
 LinkIt/obj/
 LinkIt/Temp/
+LinkIt/Builds/
 
 # Filetypes:
 *.sln
