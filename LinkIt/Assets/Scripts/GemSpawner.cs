@@ -227,22 +227,22 @@ public class GemSpawner : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Equals))
         {
-            mSpawnFrequency += SPAWN_FREQ_DELTA;
+            IncrementSpawnFreq();
         }
 
         else if (Input.GetKeyDown(KeyCode.Minus))
         {
-            mSpawnFrequency -= SPAWN_FREQ_DELTA;
+            DecrementSpawnFreq();
         }
 
         if (Input.GetKeyDown(KeyCode.PageUp))
         {
-            mDropSpeed += DROP_SPEED_DELTA;
+            DecrementDropSpeed();
         }
 
         else if (Input.GetKeyDown(KeyCode.PageDown))
         {
-            mDropSpeed -= DROP_SPEED_DELTA;
+            DecrementDropSpeed();
         }
     }
 
@@ -343,5 +343,25 @@ public class GemSpawner : MonoBehaviour
             SpawnList[i] = SpawnList[r];
             SpawnList[r] = tmp;
         }
+    }
+
+    public void IncrementSpawnFreq()
+    {
+        mSpawnFrequency += SPAWN_FREQ_DELTA;
+    }
+
+    public void DecrementSpawnFreq()
+    {
+        mSpawnFrequency -= SPAWN_FREQ_DELTA;
+    }
+
+    public void IncrementDropSpeed()
+    {
+        mDropSpeed += DROP_SPEED_DELTA;
+    }
+
+    public void DecrementDropSpeed()
+    {
+        mDropSpeed -= DROP_SPEED_DELTA;
     }
 }
