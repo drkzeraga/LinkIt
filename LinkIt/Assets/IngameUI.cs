@@ -3,7 +3,8 @@ using System.Collections;
 
 public class IngameUI : MonoBehaviour {
 
-    public GameObject GameSingletons;
+    public GameObject  GameSingletons;
+    public Canvas      IngameMenuCanvas;
     private GemSpawner mGemSpawner;
 
 	// Use this for initialization
@@ -24,6 +25,11 @@ public class IngameUI : MonoBehaviour {
     public void ToggleDropSpeed()
     {
         mGemSpawner.IncrementDropSpeed();
+    }
+
+    public void MenuPressed()
+    {
+        IngameMenuCanvas.GetComponent<IngameMenu>().ShowIngameMenu();
     }
 
 }

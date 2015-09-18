@@ -54,6 +54,7 @@
      <Compile Include="Assets\Scripts\GemManager.cs" />
      <Compile Include="Assets\Scripts\GemSpawner.cs" />
      <Compile Include="Assets\Scripts\HealthKeeper.cs" />
+     <Compile Include="Assets\Scripts\IngameMenu.cs" />
      <Compile Include="Assets\Scripts\Link.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
      <Compile Include="Assets\Scripts\Networking.cs" />
